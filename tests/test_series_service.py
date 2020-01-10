@@ -203,3 +203,12 @@ class TestSeriesService(ServiceTestBase):
         self.assertEqual(2, len(s.data))
         self.assertEqual(None, s.get_first_value())
         self.assertEqual(2, s.get_last_value())
+
+    def test_large_insert(self):
+        date = datetime.now()
+        data = []
+        for i in range(10 ** 6):
+            data.append(Sample(1, date))
+            date = date - timedelta(minutes=1)
+        series_to_insert = Series(ENTITY, METRIC, data)
+        self.service.insert(series_to_insert)
