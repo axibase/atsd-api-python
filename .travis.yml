@@ -22,10 +22,10 @@ install:
   - curl --user ${ATSD_LOGIN}:${ATSD_PASSWORD} ${VERSION_URL}
 script:
   - pip list
+  - python -m unittest discover -v -s tests/transformations
   - python -m unittest discover -v tests
   - pip install pandas
   - python -m unittest discover -v -s tests/pandas
-  - python -m unittest discover -v -s tests/transformations
   - spellcheck
   - linkcheck
   - stylecheck

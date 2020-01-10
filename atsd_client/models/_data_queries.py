@@ -123,10 +123,10 @@ def set_if_type_is_valid(value, expected_type):
     return value
 
 
-def set_if_has_attr(value, expected_attr_owner):
-    if not hasattr(expected_attr_owner, value):
-        raise ValueError("Expected one of " + str(expected_attr_owner) + " attributes, found: " + str(value))
-    return value
+def set_if_has_attr(attr_name, expected_attr_owner):
+    if not hasattr(expected_attr_owner, attr_name):
+        raise ValueError("Expected one of " + str(expected_attr_owner) + " attributes, found: " + str(attr_name))
+    return attr_name
 
 
 def set_if_interval(value):
