@@ -211,4 +211,4 @@ class TestSeriesService(ServiceTestBase):
             data.append(Sample(1, date))
             date = date - timedelta(minutes=1)
         series_to_insert = Series(ENTITY, METRIC, data)
-        self.service.insert(series_to_insert)
+        self.assertTrue(self.service.insert(series_to_insert))
