@@ -31,20 +31,20 @@ class TestHoltWinters(TestCase):
 
     def test_set_period(self):
         hw = HoltWinters()
-        hw.set_period(PERIOD_COUNT, PERIOD_UNIT)
+        hw.set_period(count=PERIOD_COUNT, unit=PERIOD_UNIT)
         self.assertEqual(PERIOD_DICT, hw.period)
         self.assertRaises(ValueError, hw.set_period, INCORRECT_VALUE, PERIOD_UNIT)
         self.assertRaises(ValueError, hw.set_period, PERIOD_COUNT, INCORRECT_VALUE)
 
     def test_set_period_dict(self):
         hw = HoltWinters()
-        hw.set_period_dict(PERIOD_INTERVAL)
+        hw.set_period(PERIOD_INTERVAL)
         self.assertEqual(PERIOD_INTERVAL, hw.period)
-        hw.set_period_dict(PERIOD_DICT)
+        hw.set_period(PERIOD_DICT)
         self.assertEqual(PERIOD_DICT, hw.period)
-        self.assertRaises(ValueError, hw.set_period_dict, {'count': PERIOD_COUNT, 'incorrect_param': PERIOD_UNIT})
-        self.assertRaises(ValueError, hw.set_period_dict, {'count': INCORRECT_VALUE, 'unit': PERIOD_UNIT})
-        self.assertRaises(ValueError, hw.set_period_dict, {'count': PERIOD_COUNT, 'unit': INCORRECT_VALUE})
+        self.assertRaises(ValueError, hw.set_period, {'count': PERIOD_COUNT, 'incorrect_param': PERIOD_UNIT})
+        self.assertRaises(ValueError, hw.set_period, {'count': INCORRECT_VALUE, 'unit': PERIOD_UNIT})
+        self.assertRaises(ValueError, hw.set_period, {'count': PERIOD_COUNT, 'unit': INCORRECT_VALUE})
 
     def test_set_alpha(self):
         hw = HoltWinters()

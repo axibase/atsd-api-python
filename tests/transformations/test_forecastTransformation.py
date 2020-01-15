@@ -58,22 +58,22 @@ class TestForecastTransformation(TestCase):
 
     def test_set_score_interval(self):
         forecast = ForecastTransformation()
-        forecast.set_score_interval(SCORE_INTERVAL_COUNT, SCORE_INTERVAL_UNIT)
+        forecast.set_score_interval(count=SCORE_INTERVAL_COUNT, unit=SCORE_INTERVAL_UNIT)
         self.assertEqual(SCORE_INTERVAL_DICT, forecast.scoreInterval)
         self.assertRaises(ValueError, forecast.set_score_interval, INCORRECT_VALUE, SCORE_INTERVAL_UNIT)
         self.assertRaises(ValueError, forecast.set_score_interval, SCORE_INTERVAL_COUNT, INCORRECT_VALUE)
 
     def test_set_score_interval_dict(self):
         forecast = ForecastTransformation()
-        forecast.set_score_interval_dict(SCORE_INTERVAL)
+        forecast.set_score_interval(SCORE_INTERVAL)
         self.assertEqual(SCORE_INTERVAL, forecast.scoreInterval)
-        forecast.set_score_interval_dict(SCORE_INTERVAL_DICT)
+        forecast.set_score_interval(SCORE_INTERVAL_DICT)
         self.assertEqual(SCORE_INTERVAL_DICT, forecast.scoreInterval)
-        self.assertRaises(ValueError, forecast.set_score_interval_dict, {'count': SCORE_INTERVAL_COUNT,
+        self.assertRaises(ValueError, forecast.set_score_interval, {'count': SCORE_INTERVAL_COUNT,
                                                                          'incorrect_param': SCORE_INTERVAL_UNIT})
-        self.assertRaises(ValueError, forecast.set_score_interval_dict, {'count': INCORRECT_VALUE,
+        self.assertRaises(ValueError, forecast.set_score_interval, {'count': INCORRECT_VALUE,
                                                                          'unit': SCORE_INTERVAL_UNIT})
-        self.assertRaises(ValueError, forecast.set_score_interval_dict, {'count': SCORE_INTERVAL_COUNT,
+        self.assertRaises(ValueError, forecast.set_score_interval, {'count': SCORE_INTERVAL_COUNT,
                                                                          'unit': INCORRECT_VALUE})
 
     def test_set_range(self):

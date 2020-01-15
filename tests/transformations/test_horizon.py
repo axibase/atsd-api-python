@@ -23,21 +23,21 @@ class TestHorizon(TestCase):
 
     def test_set_interval(self):
         horizon = Horizon()
-        horizon.set_interval(INTERVAL_COUNT, INTERVAL_UNIT)
+        horizon.set_interval(count=INTERVAL_COUNT, unit=INTERVAL_UNIT)
         self.assertEqual(INTERVAL_DICT, horizon.interval)
         self.assertRaises(ValueError, horizon.set_interval, INCORRECT_VALUE, INTERVAL_UNIT)
         self.assertRaises(ValueError, horizon.set_interval, INTERVAL_COUNT, INCORRECT_VALUE)
 
     def test_set_interval_dict(self):
         horizon = Horizon()
-        horizon.set_interval_dict(INTERVAL)
+        horizon.set_interval(INTERVAL)
         self.assertEqual(INTERVAL, horizon.interval)
-        horizon.set_interval_dict(INTERVAL_DICT)
+        horizon.set_interval(INTERVAL_DICT)
         self.assertEqual(INTERVAL_DICT, horizon.interval)
-        self.assertRaises(ValueError, horizon.set_interval_dict, {'count': INTERVAL_COUNT,
+        self.assertRaises(ValueError, horizon.set_interval, {'count': INTERVAL_COUNT,
                                                                   INCORRECT_VALUE: INTERVAL_UNIT})
-        self.assertRaises(ValueError, horizon.set_interval_dict, {'count': INCORRECT_VALUE, 'unit': INTERVAL_UNIT})
-        self.assertRaises(ValueError, horizon.set_interval_dict, {'count': INTERVAL_COUNT, 'unit': INCORRECT_VALUE})
+        self.assertRaises(ValueError, horizon.set_interval, {'count': INCORRECT_VALUE, 'unit': INTERVAL_UNIT})
+        self.assertRaises(ValueError, horizon.set_interval, {'count': INTERVAL_COUNT, 'unit': INCORRECT_VALUE})
 
     def test_set_length(self):
         horizon = Horizon()

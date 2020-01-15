@@ -1,8 +1,6 @@
 import numbers
-from ._data_queries import set_if_type_is_valid, set_if_has_attr, set_if_interval
-
-
-unicode = str
+from ._data_queries import set_if_type_is_valid, set_if_has_attr
+from ._interval import *
 
 
 # ------------------------------------------------------------------------------
@@ -98,7 +96,7 @@ class Smooth:
         if count is not None:
             self.set_count(count)
         if interval is not None:
-            self.set_interval_dict(interval)
+            self.set_interval(interval)
         if minimumCount is not None:
             self.set_minimum_count(minimumCount)
         if incompleteValue is not None:
@@ -110,11 +108,8 @@ class Smooth:
     def set_count(self, count):
         self.count = set_if_type_is_valid(count, numbers.Number)
 
-    def set_interval(self, count, unit):
-        self.set_interval_dict({'count': count, 'unit': unit})
-
-    def set_interval_dict(self, interval):
-        self.interval = set_if_interval(interval)
+    def set_interval(self, interval=None, count=None, unit=None):
+        self.interval = set_if_interval(interval, count, unit)
 
     def set_minimum_count(self, minimum_count):
         self.minimumCount = set_if_type_is_valid(minimum_count, numbers.Number)
@@ -136,7 +131,7 @@ class Downsample:
         if ratio is not None:
             self.set_ratio(ratio)
         if gap is not None:
-            self.set_gap_dict(gap)
+            self.set_gap(gap)
 
     def set_algorithm(self, algorithm):
         self.algorithm = set_if_has_attr(algorithm, DownsampleAlgorithm)
@@ -147,11 +142,8 @@ class Downsample:
     def set_ratio(self, ratio):
         self.ratio = set_if_type_is_valid(ratio, numbers.Number)
 
-    def set_gap(self, count, unit):
-        self.set_gap_dict({'count': count, 'unit': unit})
-
-    def set_gap_dict(self, gap):
-        self.gap = set_if_interval(gap)
+    def set_gap(self, gap=None, count=None, unit=None):
+        self.gap = set_if_interval(gap, count, unit)
 
 
 class Evaluate:
@@ -206,7 +198,7 @@ class ForecastTransformation:
         if include is not None:
             self.set_include(include)
         if scoreInterval is not None:
-            self.set_score_interval_dict(scoreInterval)
+            self.set_score_interval(scoreInterval)
         if min_range is not None and max_range is not None:
             self.set_range(min_range, max_range)
         if holtwinters is not None:
@@ -231,17 +223,14 @@ class ForecastTransformation:
     def set_include(self, include):
         self.include = [include] if not isinstance(include, list) else include
 
-    def set_score_interval(self, count, unit):
-        self.set_score_interval_dict({'count': count, 'unit': unit})
-
-    def set_score_interval_dict(self, score_interval):
-        self.scoreInterval = set_if_interval(score_interval)
+    def set_score_interval(self, score_interval=None, count=None, unit=None):
+        self.scoreInterval = set_if_interval(score_interval, count, unit)
 
     def set_range(self, minRange, maxRange):
         if not isinstance(minRange, numbers.Number):
-            raise ValueError('Expected min to be a number, found: ' + unicode(type(minRange)))
+            raise ValueError('Expected min to be a number, found: ' + str(type(minRange)))
         if not isinstance(maxRange, numbers.Number):
-            raise ValueError('Expected max to be a number, found: ' + unicode(type(maxRange)))
+            raise ValueError('Expected max to be a number, found: ' + str(type(maxRange)))
         self.range = {'min': minRange, 'max': maxRange}
 
     def set_holtwinters(self, holtwinters):
@@ -266,7 +255,7 @@ class HoltWinters:
         if auto is not None:
             self.set_auto(auto)
         if period is not None:
-            self.set_period_dict(period)
+            self.set_period(period)
         if alpha is not None:
             self.set_alpha(alpha)
         if beta is not None:
@@ -277,11 +266,8 @@ class HoltWinters:
     def set_auto(self, auto):
         self.auto = set_if_type_is_valid(auto, bool)
 
-    def set_period(self, count, unit):
-        self.set_period_dict({'count': count, 'unit': unit})
-
-    def set_period_dict(self, period):
-        self.period = set_if_interval(period)
+    def set_period(self, period=None, count=None, unit=None):
+        self.period = set_if_interval(period, count, unit)
 
     def set_alpha(self, alpha):
         self.alpha = set_if_type_is_valid(alpha, numbers.Number)
@@ -297,7 +283,7 @@ class Horizon:
 
     def __init__(self, interval=None, length=None, endDate=None, startDate=None):
         if interval is not None:
-            self.set_interval_dict(interval)
+            self.set_interval(interval)
         if length is not None:
             self.set_length(length)
         if endDate is not None:
@@ -305,11 +291,8 @@ class Horizon:
         if startDate is not None:
             self.set_start_date(startDate)
 
-    def set_interval(self, count, unit):
-        self.set_interval_dict({'count': count, 'unit': unit})
-
-    def set_interval_dict(self, interval):
-        self.interval = set_if_interval(interval)
+    def set_interval(self, interval=None, count=None, unit=None):
+        self.interval = set_if_interval(interval, count, unit)
 
     def set_length(self, length):
         self.length = set_if_type_is_valid(length, numbers.Number)
@@ -327,7 +310,7 @@ class Arima:
         if auto is not None:
             self.set_auto(auto)
         if autoRegressionInterval is not None:
-            self.set_auto_regression_interval_dict(autoRegressionInterval)
+            self.set_auto_regression_interval(autoRegressionInterval)
         if p is not None:
             self.set_p(p)
         if d is not None:
@@ -336,11 +319,8 @@ class Arima:
     def set_auto(self, auto):
         self.auto = set_if_type_is_valid(auto, bool)
 
-    def set_auto_regression_interval(self, count, unit):
-        self.set_auto_regression_interval_dict({'count': count, 'unit': unit})
-
-    def set_auto_regression_interval_dict(self, auto_regression_interval):
-        self.autoRegressionInterval = set_if_interval(auto_regression_interval)
+    def set_auto_regression_interval(self, auto_regression_interval=None, count=None, unit=None):
+        self.autoRegressionInterval = set_if_interval(auto_regression_interval, count, unit)
 
     def set_p(self, p):
         self.p = set_if_type_is_valid(p, numbers.Number)
@@ -353,17 +333,14 @@ class Baseline:
 
     def __init__(self, period=None, count=None, function=None):
         if period is not None:
-            self.set_period_dict(period)
+            self.set_period(period)
         if count is not None:
             self.set_count(count)
         if function is not None:
             self.set_function(function)
 
-    def set_period(self, count, unit):
-        self.set_period_dict({'count': count, 'unit': unit})
-
-    def set_period_dict(self, period):
-        self.period = set_if_interval(period)
+    def set_period(self, period=None, count=None, unit=None):
+        self.period = set_if_interval(period, count, unit)
 
     def set_count(self, count):
         self.count = set_if_type_is_valid(count, numbers.Number)

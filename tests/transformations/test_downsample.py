@@ -41,17 +41,17 @@ class TestDownsample(TestCase):
 
     def test_set_gap(self):
         downsample = Downsample()
-        downsample.set_gap(GAP_COUNT, GAP_UNIT)
+        downsample.set_gap(count=GAP_COUNT, unit=GAP_UNIT)
         self.assertEqual(GAP_DICT, downsample.gap)
         self.assertRaises(ValueError, downsample.set_gap, INCORRECT_VALUE, GAP_UNIT)
         self.assertRaises(ValueError, downsample.set_gap, GAP_COUNT, INCORRECT_VALUE)
 
     def test_set_gap_dict(self):
         downsample = Downsample()
-        downsample.set_gap_dict(GAP_INTERVAL)
+        downsample.set_gap(GAP_INTERVAL)
         self.assertEqual(GAP_INTERVAL, downsample.gap)
-        downsample.set_gap_dict(GAP_DICT)
+        downsample.set_gap(GAP_DICT)
         self.assertEqual(GAP_DICT, downsample.gap)
-        self.assertRaises(ValueError, downsample.set_gap_dict, {'count': GAP_COUNT, 'incorrect_param': GAP_UNIT})
-        self.assertRaises(ValueError, downsample.set_gap_dict, {'count': INCORRECT_VALUE, 'unit': GAP_UNIT})
-        self.assertRaises(ValueError, downsample.set_gap_dict, {'count': GAP_COUNT, 'unit': INCORRECT_VALUE})
+        self.assertRaises(ValueError, downsample.set_gap, {'count': GAP_COUNT, 'incorrect_param': GAP_UNIT})
+        self.assertRaises(ValueError, downsample.set_gap, {'count': INCORRECT_VALUE, 'unit': GAP_UNIT})
+        self.assertRaises(ValueError, downsample.set_gap, {'count': GAP_COUNT, 'unit': INCORRECT_VALUE})

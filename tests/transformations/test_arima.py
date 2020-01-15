@@ -29,22 +29,22 @@ class TestArima(TestCase):
 
     def test_set_auto_regression_interval(self):
         arima = Arima()
-        arima.set_auto_regression_interval(INTERVAL_COUNT, INTERVAL_UNIT)
+        arima.set_auto_regression_interval(count=INTERVAL_COUNT, unit=INTERVAL_UNIT)
         self.assertEqual(INTERVAL_DICT, arima.autoRegressionInterval)
         self.assertRaises(ValueError, arima.set_auto_regression_interval, INCORRECT_VALUE, INTERVAL_UNIT)
         self.assertRaises(ValueError, arima.set_auto_regression_interval, INTERVAL_COUNT, INCORRECT_VALUE)
 
     def test_set_auto_regression_interval_dict(self):
         arima = Arima()
-        arima.set_auto_regression_interval_dict(INTERVAL)
+        arima.set_auto_regression_interval(INTERVAL)
         self.assertEqual(INTERVAL, arima.autoRegressionInterval)
-        arima.set_auto_regression_interval_dict(INTERVAL_DICT)
+        arima.set_auto_regression_interval(INTERVAL_DICT)
         self.assertEqual(INTERVAL_DICT, arima.autoRegressionInterval)
-        self.assertRaises(ValueError, arima.set_auto_regression_interval_dict, {'count': INTERVAL_COUNT,
+        self.assertRaises(ValueError, arima.set_auto_regression_interval, {'count': INTERVAL_COUNT,
                                                                                 INCORRECT_VALUE: INTERVAL_UNIT})
-        self.assertRaises(ValueError, arima.set_auto_regression_interval_dict, {'count': INCORRECT_VALUE,
+        self.assertRaises(ValueError, arima.set_auto_regression_interval, {'count': INCORRECT_VALUE,
                                                                                 'unit': INTERVAL_UNIT})
-        self.assertRaises(ValueError, arima.set_auto_regression_interval_dict, {'count': INTERVAL_COUNT,
+        self.assertRaises(ValueError, arima.set_auto_regression_interval, {'count': INTERVAL_COUNT,
                                                                                 'unit': INCORRECT_VALUE})
 
     def test_set_p(self):

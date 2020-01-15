@@ -36,20 +36,20 @@ class TestSmooth(TestCase):
 
     def test_set_interval(self):
         smooth = Smooth(TYPE)
-        smooth.set_interval(1, TimeUnit.DAY)
+        smooth.set_interval(count=1, unit=TimeUnit.DAY)
         self.assertEqual(DICT_INTERVAL, smooth.interval)
         self.assertRaises(ValueError, smooth.set_interval, 1, INCORRECT_VALUE)
         self.assertRaises(ValueError, smooth.set_interval, INCORRECT_VALUE, TimeUnit.DAY)
 
     def test_set_interval_dict(self):
         smooth = Smooth(TYPE)
-        smooth.set_interval_dict(INTERVAL)
+        smooth.set_interval(INTERVAL)
         self.assertEqual(INTERVAL, smooth.interval)
-        smooth.set_interval_dict(DICT_INTERVAL)
+        smooth.set_interval(DICT_INTERVAL)
         self.assertEqual(DICT_INTERVAL, smooth.interval)
-        self.assertRaises(ValueError, smooth.set_interval_dict, {'count': 1, 'incorrect_param': TimeUnit.DAY})
-        self.assertRaises(ValueError, smooth.set_interval_dict, {'count': INCORRECT_VALUE, 'unit': TimeUnit.DAY})
-        self.assertRaises(ValueError, smooth.set_interval_dict, {'count': 1, 'unit': INCORRECT_VALUE})
+        self.assertRaises(ValueError, smooth.set_interval, {'count': 1, 'incorrect_param': TimeUnit.DAY})
+        self.assertRaises(ValueError, smooth.set_interval, {'count': INCORRECT_VALUE, 'unit': TimeUnit.DAY})
+        self.assertRaises(ValueError, smooth.set_interval, {'count': 1, 'unit': INCORRECT_VALUE})
 
     def test_set_minimum_count(self):
         smooth = Smooth(TYPE)

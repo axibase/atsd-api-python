@@ -22,20 +22,20 @@ class TestBaseline(TestCase):
 
     def test_set_period(self):
         baseline = Baseline()
-        baseline.set_period(PERIOD_COUNT, PERIOD_UNIT)
+        baseline.set_period(count=PERIOD_COUNT, unit=PERIOD_UNIT)
         self.assertEqual(PERIOD_DICT, baseline.period)
         self.assertRaises(ValueError, baseline.set_period, INCORRECT_VALUE, PERIOD_UNIT)
         self.assertRaises(ValueError, baseline.set_period, PERIOD_COUNT, INCORRECT_VALUE)
 
     def test_set_period_dict(self):
         baseline = Baseline()
-        baseline.set_period_dict(PERIOD_INTERVAL)
+        baseline.set_period(PERIOD_INTERVAL)
         self.assertEqual(PERIOD_INTERVAL, baseline.period)
-        baseline.set_period_dict(PERIOD_DICT)
+        baseline.set_period(PERIOD_DICT)
         self.assertEqual(PERIOD_DICT, baseline.period)
-        self.assertRaises(ValueError, baseline.set_period_dict, {'count': PERIOD_COUNT, INCORRECT_VALUE: PERIOD_UNIT})
-        self.assertRaises(ValueError, baseline.set_period_dict, {'count': INCORRECT_VALUE, 'unit': PERIOD_UNIT})
-        self.assertRaises(ValueError, baseline.set_period_dict, {'count': PERIOD_COUNT, 'unit': INCORRECT_VALUE})
+        self.assertRaises(ValueError, baseline.set_period, {'count': PERIOD_COUNT, INCORRECT_VALUE: PERIOD_UNIT})
+        self.assertRaises(ValueError, baseline.set_period, {'count': INCORRECT_VALUE, 'unit': PERIOD_UNIT})
+        self.assertRaises(ValueError, baseline.set_period, {'count': PERIOD_COUNT, 'unit': INCORRECT_VALUE})
 
     def test_set_count(self):
         baseline = Baseline()

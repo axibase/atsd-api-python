@@ -18,6 +18,7 @@ permissions and limitations under the License.
 import numbers
 from .._utilities import copy_not_empty_attrs
 from .._time_utilities import to_iso
+from ._interval import *
 
 unicode = str
 
@@ -128,46 +129,6 @@ def set_if_has_attr(attr_name, expected_attr_owner):
         raise ValueError("Expected one of " + str(expected_attr_owner) + " attributes, found: " + str(attr_name))
     return attr_name
 
-
-def set_if_interval(value):
-    if not is_interval(value):
-        raise ValueError("Expected an Interval instance, found: " + unicode(type(value)))
-    return value
-
-
-class Interval:
-
-    def __init__(self, count, unit):
-        if not isinstance(count, numbers.Number):
-            raise ValueError('Period count must be a number, found: ' + unicode(type(count)))
-        if not hasattr(TimeUnit, unit):
-            raise ValueError('Invalid unit ' + str(unit))
-        self.count = count
-        self.unit = unit
-
-    def __contains__(self, item):
-        return hasattr(self, item)
-
-    def __getitem__(self, item):
-        return self.__getattribute__(item)
-
-    def __setitem__(self, key, value):
-        if key.lower() == "count":
-            self.count = set_if_type_is_valid(value, numbers.Number)
-        elif key.lower() == "unit":
-            self.unit = set_if_has_attr(value, TimeUnit)
-        else:
-            raise ValueError("Invalid name of Interval key: " + str(key))
-
-
-def is_interval(obj):
-    if not ((obj is not None) and all(key in obj for key in ("count", "unit"))):
-        return False
-    if not isinstance(obj["count"], numbers.Number):
-        raise ValueError("Interval count must be a number, found: " + unicode(type(obj["count"])))
-    if not hasattr(TimeUnit, obj["unit"]):
-        raise ValueError("Interval unit must be one of TimeUnit, found: " + str(obj["unit"]))
-    return True
 
 
 # ===============================================================================
@@ -509,11 +470,11 @@ class Rate:
         if counter is not None:
             self.set_counter(counter)
 
-    def set_period(self, count, unit=TimeUnit.SECOND):
-        self.set_period_dict({'count': count, 'unit': unit})
-
-    def set_period_dict(self, period):
-        self.period = set_if_interval(period)
+    def set_period(self, count=None, unit=TimeUnit.SECOND, interval=None):
+        if interval is not None:
+            self.period = set_if_interval(interval)
+        else:
+            self.period = set_if_interval(count=count, unit=unit)
 
     def set_counter(self, counter):
         if isinstance(counter, bool):
