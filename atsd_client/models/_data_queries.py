@@ -55,20 +55,6 @@ class InterpolateBoundary:
 
 
 # ------------------------------------------------------------------------------
-class TimeUnit:
-    NANOSECOND = 'NANOSECOND'
-    MILLISECOND = 'MILLISECOND'
-    SECOND = 'SECOND'
-    MINUTE = 'MINUTE'
-    HOUR = 'HOUR'
-    DAY = 'DAY'
-    WEEK = 'WEEK'
-    MONTH = 'MONTH'
-    QUARTER = 'QUARTER'
-    YEAR = 'YEAR'
-
-
-# ------------------------------------------------------------------------------
 class PeriodAlign:
     CALENDAR = "CALENDAR"
     START_TIME = "START_TIME"

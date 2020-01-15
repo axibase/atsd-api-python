@@ -25,8 +25,8 @@ class TestHorizon(TestCase):
         horizon = Horizon()
         horizon.set_interval(count=INTERVAL_COUNT, unit=INTERVAL_UNIT)
         self.assertEqual(INTERVAL_DICT, horizon.interval)
-        self.assertRaises(ValueError, horizon.set_interval, INCORRECT_VALUE, INTERVAL_UNIT)
-        self.assertRaises(ValueError, horizon.set_interval, INTERVAL_COUNT, INCORRECT_VALUE)
+        self.assertRaises(ValueError, horizon.set_interval, None, INCORRECT_VALUE, INTERVAL_UNIT)
+        self.assertRaises(ValueError, horizon.set_interval, None, INTERVAL_COUNT, INCORRECT_VALUE)
 
     def test_set_interval_dict(self):
         horizon = Horizon()

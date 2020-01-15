@@ -60,8 +60,8 @@ class TestForecastTransformation(TestCase):
         forecast = ForecastTransformation()
         forecast.set_score_interval(count=SCORE_INTERVAL_COUNT, unit=SCORE_INTERVAL_UNIT)
         self.assertEqual(SCORE_INTERVAL_DICT, forecast.scoreInterval)
-        self.assertRaises(ValueError, forecast.set_score_interval, INCORRECT_VALUE, SCORE_INTERVAL_UNIT)
-        self.assertRaises(ValueError, forecast.set_score_interval, SCORE_INTERVAL_COUNT, INCORRECT_VALUE)
+        self.assertRaises(ValueError, forecast.set_score_interval, None, INCORRECT_VALUE, SCORE_INTERVAL_UNIT)
+        self.assertRaises(ValueError, forecast.set_score_interval, None, SCORE_INTERVAL_COUNT, INCORRECT_VALUE)
 
     def test_set_score_interval_dict(self):
         forecast = ForecastTransformation()

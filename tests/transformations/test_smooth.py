@@ -38,8 +38,8 @@ class TestSmooth(TestCase):
         smooth = Smooth(TYPE)
         smooth.set_interval(count=1, unit=TimeUnit.DAY)
         self.assertEqual(DICT_INTERVAL, smooth.interval)
-        self.assertRaises(ValueError, smooth.set_interval, 1, INCORRECT_VALUE)
-        self.assertRaises(ValueError, smooth.set_interval, INCORRECT_VALUE, TimeUnit.DAY)
+        self.assertRaises(ValueError, smooth.set_interval, None, 1, INCORRECT_VALUE)
+        self.assertRaises(ValueError, smooth.set_interval, None, INCORRECT_VALUE, TimeUnit.DAY)
 
     def test_set_interval_dict(self):
         smooth = Smooth(TYPE)

@@ -43,8 +43,8 @@ class TestDownsample(TestCase):
         downsample = Downsample()
         downsample.set_gap(count=GAP_COUNT, unit=GAP_UNIT)
         self.assertEqual(GAP_DICT, downsample.gap)
-        self.assertRaises(ValueError, downsample.set_gap, INCORRECT_VALUE, GAP_UNIT)
-        self.assertRaises(ValueError, downsample.set_gap, GAP_COUNT, INCORRECT_VALUE)
+        self.assertRaises(ValueError, downsample.set_gap, None, INCORRECT_VALUE, GAP_UNIT)
+        self.assertRaises(ValueError, downsample.set_gap, None, GAP_COUNT, INCORRECT_VALUE)
 
     def test_set_gap_dict(self):
         downsample = Downsample()

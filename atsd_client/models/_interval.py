@@ -1,5 +1,19 @@
 import numbers
-from ._data_queries import TimeUnit, set_if_has_attr, set_if_type_is_valid
+from .._utilities import set_if_has_attr, set_if_type_is_valid
+
+
+# ------------------------------------------------------------------------------
+class TimeUnit:
+    NANOSECOND = 'NANOSECOND'
+    MILLISECOND = 'MILLISECOND'
+    SECOND = 'SECOND'
+    MINUTE = 'MINUTE'
+    HOUR = 'HOUR'
+    DAY = 'DAY'
+    WEEK = 'WEEK'
+    MONTH = 'MONTH'
+    QUARTER = 'QUARTER'
+    YEAR = 'YEAR'
 
 
 def set_if_interval(interval=None, count=None, unit=None):
@@ -41,6 +55,11 @@ class Interval:
             self.unit = set_if_has_attr(value, TimeUnit)
         else:
             raise ValueError("Invalid name of Interval key: " + str(key))
+
+    def __eq__(self, other):
+        if not ((other is not None) and all(key in other for key in ("count", "unit"))):
+            return False
+        return other["count"] == self.count and other["unit"] == self.unit
 
 
 def is_interval(obj):

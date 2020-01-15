@@ -24,8 +24,8 @@ class TestBaseline(TestCase):
         baseline = Baseline()
         baseline.set_period(count=PERIOD_COUNT, unit=PERIOD_UNIT)
         self.assertEqual(PERIOD_DICT, baseline.period)
-        self.assertRaises(ValueError, baseline.set_period, INCORRECT_VALUE, PERIOD_UNIT)
-        self.assertRaises(ValueError, baseline.set_period, PERIOD_COUNT, INCORRECT_VALUE)
+        self.assertRaises(ValueError, baseline.set_period, None, INCORRECT_VALUE, PERIOD_UNIT)
+        self.assertRaises(ValueError, baseline.set_period, None, PERIOD_COUNT, INCORRECT_VALUE)
 
     def test_set_period_dict(self):
         baseline = Baseline()

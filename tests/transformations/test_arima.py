@@ -31,8 +31,8 @@ class TestArima(TestCase):
         arima = Arima()
         arima.set_auto_regression_interval(count=INTERVAL_COUNT, unit=INTERVAL_UNIT)
         self.assertEqual(INTERVAL_DICT, arima.autoRegressionInterval)
-        self.assertRaises(ValueError, arima.set_auto_regression_interval, INCORRECT_VALUE, INTERVAL_UNIT)
-        self.assertRaises(ValueError, arima.set_auto_regression_interval, INTERVAL_COUNT, INCORRECT_VALUE)
+        self.assertRaises(ValueError, arima.set_auto_regression_interval, None, INCORRECT_VALUE, INTERVAL_UNIT)
+        self.assertRaises(ValueError, arima.set_auto_regression_interval, None, INTERVAL_COUNT, INCORRECT_VALUE)
 
     def test_set_auto_regression_interval_dict(self):
         arima = Arima()
