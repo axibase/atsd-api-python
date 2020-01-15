@@ -16,7 +16,7 @@ permissions and limitations under the License.
 """
 
 import numbers
-from .._utilities import copy_not_empty_attrs
+from .._utilities import copy_not_empty_attrs, set_if_type_is_valid, set_if_has_attr
 from .._time_utilities import to_iso
 from ._interval import *
 
@@ -118,23 +118,10 @@ class Severity:
     FATAL = 7
 
 
-def set_if_type_is_valid(value, expected_type):
-    if not isinstance(value, expected_type):
-        raise ValueError("Expected a " + str(expected_type) + " found: " + unicode(type(value)))
-    return value
-
-
-def set_if_has_attr(attr_name, expected_attr_owner):
-    if not hasattr(expected_attr_owner, attr_name):
-        raise ValueError("Expected one of " + str(expected_attr_owner) + " attributes, found: " + str(attr_name))
-    return attr_name
-
-
-
 # ===============================================================================
 # General Filters
 # ===============================================================================
-class EntityFilter():
+class EntityFilter:
     """
     Helper class to retrieve a list of entities for the specified filters.
     One of the entity arguments is required.

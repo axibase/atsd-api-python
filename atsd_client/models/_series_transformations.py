@@ -1,5 +1,3 @@
-import numbers
-from ._data_queries import set_if_type_is_valid, set_if_has_attr
 from ._interval import *
 
 
