@@ -16,8 +16,9 @@ permissions and limitations under the License.
 """
 
 import numbers
-from .._utilities import copy_not_empty_attrs
+from .._utilities import copy_not_empty_attrs, set_if_type_is_valid, set_if_has_attr
 from .._time_utilities import to_iso
+from ._interval import *
 
 unicode = str
 
@@ -25,14 +26,14 @@ unicode = str
 # ===============================================================================
 # ###################################### Constants
 # ===============================================================================
-class SeriesType(object):
+class SeriesType:
     HISTORY = 'HISTORY'
     FORECAST = 'FORECAST'
     FORECAST_DEVIATION = 'FORECAST_DEVIATION'
 
 
 # ------------------------------------------------------------------------------
-class InterpolateType(object):
+class InterpolateType:
     NONE = 'NONE'
     PREVIOUS = 'PREVIOUS'
     NEXT = 'NEXT'
@@ -41,34 +42,20 @@ class InterpolateType(object):
 
 
 # ------------------------------------------------------------------------------
-class InterpolateFunction(object):
+class InterpolateFunction:
     AUTO = 'AUTO'
     LINEAR = 'LINEAR'
     PREVIOUS = 'PREVIOUS'
 
 
 # ------------------------------------------------------------------------------
-class InterpolateBoundary(object):
+class InterpolateBoundary:
     INNER = 'INNER'
     OUTER = 'OUTER'
 
 
 # ------------------------------------------------------------------------------
-class TimeUnit(object):
-    NANOSECOND = 'NANOSECOND'
-    MILLISECOND = 'MILLISECOND'
-    SECOND = 'SECOND'
-    MINUTE = 'MINUTE'
-    HOUR = 'HOUR'
-    DAY = 'DAY'
-    WEEK = 'WEEK'
-    MONTH = 'MONTH'
-    QUARTER = 'QUARTER'
-    YEAR = 'YEAR'
-
-
-# ------------------------------------------------------------------------------
-class PeriodAlign(object):
+class PeriodAlign:
     CALENDAR = "CALENDAR"
     START_TIME = "START_TIME"
     FIRST_VALUE_TIME = "FIRST_VALUE_TIME"
@@ -76,7 +63,7 @@ class PeriodAlign(object):
 
 
 # ------------------------------------------------------------------------------
-class AggregateType(object):
+class AggregateType:
     DETAIL = 'DETAIL'
     COUNT = 'COUNT'
     COUNTER = 'COUNTER'
@@ -106,7 +93,7 @@ class AggregateType(object):
 
 
 # ------------------------------------------------------------------------------
-class Severity(object):
+class Severity:
     UNDEFINED = 0
     UNKNOWN = 1
     NORMAL = 2  # INFO
@@ -120,7 +107,7 @@ class Severity(object):
 # ===============================================================================
 # General Filters
 # ===============================================================================
-class EntityFilter():
+class EntityFilter:
     """
     Helper class to retrieve a list of entities for the specified filters.
     One of the entity arguments is required.
@@ -159,7 +146,7 @@ class EntityFilter():
 class DateFilter:
     def _validate(self):
         return (self.startDate is not None and self.endDate is not None) or \
-               (self.interval is not None) and all(key in self.interval for key in ("count", "unit"))
+               is_interval(self.interval)
 
     def __init__(self, start_date=None, end_date=None, interval=None):
         #: :class:`datetime` object | `long` milliseconds | `str` ISO 8601 date. Start of the selection interval.
@@ -196,7 +183,7 @@ class SeriesQuery:
     """
 
     def __init__(self, series_filter, entity_filter, date_filter, forecast_filter=None, versioning_filter=None,
-                 control_filter=None, transformation_filter=None, sample_filter=None):
+                 control_filter=None, transformation_filter=None, sample_filter=None, subseries_filter=None):
         copy_not_empty_attrs(series_filter, self)
         copy_not_empty_attrs(entity_filter, self)
         copy_not_empty_attrs(date_filter, self)
@@ -205,6 +192,10 @@ class SeriesQuery:
         copy_not_empty_attrs(transformation_filter, self)
         copy_not_empty_attrs(control_filter, self)
         copy_not_empty_attrs(sample_filter, self)
+        if subseries_filter is not None:
+            self.series = [subseries_filter] if not isinstance(subseries_filter, list) else subseries_filter
+        if (not hasattr(self, "metric")) and (not hasattr(self, "metrics")) and (not hasattr(self, "series")):
+            raise ValueError('At least one of parameters is required: metric, metrics or series.')
 
     def set_series_filter(self, value):
         copy_not_empty_attrs(value, self)
@@ -266,9 +257,7 @@ class SeriesDeleteQuery:
 
 # ------------------------------------------------------------------------------
 class SeriesFilter:
-    def __init__(self, metric, tags=None, type="HISTORY", tag_expression=None, exact_match=None):
-        if not metric:
-            raise ValueError("Metric is required.")
+    def __init__(self, metric=None, tags=None, type="HISTORY", tag_expression=None, exact_match=None, metrics=None):
         #: `str` metric name
         self.metric = metric
         #: `dict`
@@ -279,6 +268,8 @@ class SeriesFilter:
         self.tagExpression = tag_expression
         # : `bool` tags match operator: exact match if true, partial match if false
         self.exactMatch = False if exact_match is None else exact_match
+        if metrics is not None:
+            self.metrics = metrics
 
     def set_metric(self, value):
         self.metric = value
@@ -294,6 +285,9 @@ class SeriesFilter:
 
     def set_exact_match(self, value):
         self.exactMatch = value
+
+    def set_metrics(self, value):
+        self.metrics = value
 
 
 # ------------------------------------------------------------------------------
@@ -371,11 +365,33 @@ class SampleFilter:
         self.sampleFilter = "" if sampleFilter is None else sampleFilter
 
 
+# ------------------------------------------------------------------------------
+class SubseriesFilter:
+    def __init__(self, name, seriesFilter=None, entityFilter=None):
+        self.name = name
+        if seriesFilter is not None:
+            copy_not_empty_attrs(seriesFilter, self)
+            self.type = None
+        if entityFilter is not None:
+            copy_not_empty_attrs(entityFilter, self)
+
+    def set_series_filter(self, seriesFilter):
+        if not isinstance(seriesFilter, SeriesFilter):
+            raise ValueError('Incorrect series filter, expected instance of SeriesFilter class, found: ' + unicode(type(seriesFilter)))
+        copy_not_empty_attrs(seriesFilter, self)
+        self.type = None
+
+    def set_entity_filter(self, entityFilter):
+        if not isinstance(entityFilter, EntityFilter):
+            raise ValueError('Incorrect series filter, expected instance of EntityFilter class, found: ' + unicode(type(entityFilter)))
+        copy_not_empty_attrs(entityFilter, self)
+
 # =======================================================================
 # Transformations 
 # =======================================================================
 class TransformationFilter:
-    def __init__(self, aggregate=None, group=None, rate=None, interpolate=None):
+    def __init__(self, aggregate=None, group=None, rate=None, interpolate=None, smooth=None, downsample=None, evaluate=None, forecast=None):
+
         # : :class:`.Aggregate` object responsible for grouping detailed values into periods and calculating
         # statistics for each period. Default: DETAIL
         self.aggregate = aggregate
@@ -385,6 +401,10 @@ class TransformationFilter:
         # rate period)
         self.rate = rate
         self.interpolate = interpolate
+        self.smooth = smooth
+        self.downsample = downsample
+        self.evaluate = evaluate
+        self.forecast = forecast
 
     def set_aggregate(self, value):
         self.aggregate = value
@@ -398,6 +418,18 @@ class TransformationFilter:
     def set_interpolate(self, value):
         self.interpolate = value
 
+    def set_smooth(self, value):
+        self.smooth = value
+
+    def set_downsample(self, value):
+        self.downsample = value
+
+    def set_evaluate(self, value):
+        self.evaluate = value
+
+    def set_forecast(self, value):
+        self.forecast = value
+
 
 # ------------------------------------------------------------------------------
 class Rate:
@@ -406,15 +438,16 @@ class Rate:
     """
 
     def __init__(self, period=None, counter=True):
-        self.counter = counter
-        self.period = period
+        if period is not None:
+            self.set_period(period)
+        if counter is not None:
+            self.set_counter(counter)
 
-    def set_period(self, count, unit=TimeUnit.SECOND):
-        if not isinstance(count, numbers.Number):
-            raise ValueError('Period count must be a number, found: ' + unicode(type(count)))
-        if not hasattr(TimeUnit, unit):
-            raise ValueError('Invalid period unit')
-        self.period = {'count': count, 'unit': unit}
+    def set_period(self, count=None, unit=TimeUnit.SECOND, interval=None):
+        if interval is not None:
+            self.period = set_if_interval(interval)
+        else:
+            self.period = set_if_interval(count=count, unit=unit)
 
     def set_counter(self, counter):
         if isinstance(counter, bool):
