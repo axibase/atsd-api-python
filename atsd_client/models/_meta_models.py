@@ -288,8 +288,7 @@ class Entity(object):
     """
 
     def __init__(self, name, enabled=None, label=None, interpolate=None, time_zone=None, last_insert_date=None,
-                 tags=None,
-                 created_date=None):
+                 tags=None, created_date=None, version_date=None):
         #: `str` entity name
         self._name = name
         #: `str` entity label
@@ -307,12 +306,15 @@ class Entity(object):
         self._tags = NoneDict(tags)
         #: :class:`datetime` object | `long` milliseconds | `str` ISO 8601 date. Creation date for this entity
         self._createdDate = to_date(created_date)
+        #: :class:`datetime` object | `long` milliseconds | `str` ISO 8601 date. Timestamp of entity version
+        self._versionDate = to_date(version_date)
 
     def __repr__(self):
-        return "<Entity name={name}, label={label}, created_date={createdDate}, last_insert_date={lit}, tags={tags}>".format(
+        return "<Entity name={name}, label={label}, created_date={createdDate}, version_date={versionDate}, last_insert_date={lit}, tags={tags}>".format(
             name=self._name,
             label=self._label,
             createdDate=self._createdDate,
+            versionDate=self._versionDate,
             lit=self._lastInsertDate,
             tags=self._tags)
 
@@ -348,6 +350,10 @@ class Entity(object):
     @property
     def created_date(self):
         return self._createdDate
+
+    @property
+    def version_date(self):
+        return self._versionDate
 
     @name.setter
     def name(self, value):

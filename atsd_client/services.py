@@ -734,8 +734,10 @@ def response_to_dataframe(resp, reserved, **frame_params):
             el['createdDate'] = to_date(el['createdDate'])
             if 'lastInsertDate' in el:
                 el['lastInsertDate'] = to_date(el['lastInsertDate'])
+            if 'versionDate' in el:
+                el['versionDate'] = to_date(el['versionDate'])
         enc_resp.append(el)
     import pandas as pd
     pd.set_option("display.expand_frame_repr", False)
-    pd.set_option('max_colwidth', -1)
+    pd.set_option('max_colwidth', None if pd.__version__ >= '1' else -1)
     return pd.DataFrame(enc_resp, **frame_params)
